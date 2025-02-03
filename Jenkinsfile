@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'git@github.com:Dan0Silva/testing-jenkins.git' // Usando URL SSH
+        BRANCH_NAME = 'dev'
     }
 
     stages {
