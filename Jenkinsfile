@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout Nova Branch') {
             steps {
                 // Verifica qual branch foi criada
-                git url: "${GITHUB_REPO}", branch: "${env.BRANCH_NAME}"
+                git branch: 'dev', credentialsId: '06cdcd20-c171-4921-802e-a49a2409f917', url: 'git@github.com:Dan0Silva/testing-jenkins.git'
             }
         }
 
@@ -22,35 +22,16 @@ pipeline {
             }
         }
 
-        // Se os testes da nova branch passarem, enviamos para a branch development
-        stage('Enviar para Development') {
-            steps {
-                script {
-                    sh 'git checkout development'
-                    sh 'git merge ${env.BRANCH_NAME}'
-                    sh 'git push origin development'
-                }
-            }
-        }
-
-        // Rodar os testes na branch development, incluindo os testes da nova branch
-        stage('Rodar Testes em Development') {
-            steps {
-                sh 'npm install'
-                sh 'npm run test'  // Rodando todos os testes da branch development e da nova branch
-            }
-        }
-
         // Se os testes na development passarem, enviamos para a main
-        stage('Enviar para Main') {
+        stage('Enviar para Master') {
             when {
-                branch 'development'
+                branch 'dev'
             }
             steps {
                 script {
-                    sh 'git checkout main'
-                    sh 'git merge development'
-                    sh 'git push origin main'
+                    sh 'git checkout master'
+                    sh 'git merge dev'
+                    sh 'git push origin master'
                 }
             }
         }
