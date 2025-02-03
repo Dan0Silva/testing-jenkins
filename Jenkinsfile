@@ -1,73 +1,62 @@
-pipeline {
-    agent any
+// pipeline {
+//     agent any
 
-    environment {
-        GITHUB_REPO = 'https://github.com/Dan0Silva/testing-jenkins.git'
-    }
+//     environment {
+//         GITHUB_REPO = 'git@github.com:Dan0Silva/testing-jenkins.git' // Usando URL SSH
+//         BRANCH_NAME = 'dev'
+//     }
 
-    stages {
-        // Primeiro, fazemos o checkout da nova branch
-        stage('Checkout Nova Branch') {
-            steps {
-                // Verifica qual branch foi criada
-                git url: "${GITHUB_REPO}", branch: "${env.BRANCH_NAME}"
-            }
-        }
+//     stages {
+//         // Primeiro, fazemos o checkout da nova branch
+//         stage('Checkout Nova Branch') {
+//             steps {
+//                 // Checkout da branch que foi criada/pushed (a branch que disparou o build)
+//                 git branch: "${env.BRANCH_NAME}", credentialsId: '06cdcd20-c171-4921-802e-a49a2409f917', url: "${env.GITHUB_REPO}"
+//             }
+//         }
 
-        // Rodando os testes na nova branch
-        stage('Rodar Testes na Nova Branch') {
-            steps {
-                sh 'npm install'    // Comando para instalar dependências, se necessário
-                sh 'npm run test'       // Comando para rodar os testes
-            }
-        }
+//         // Rodando os testes na nova branch
+//         stage('Rodar Testes na Nova Branch') {
+//             steps {
+//                 sh 'npm install'    // Comando para instalar dependências, se necessário
+//                 sh 'npm run test'    // Comando para rodar os testes
+//             }
+//         }
 
-        // Se os testes da nova branch passarem, enviamos para a branch development
-        stage('Enviar para Development') {
-            steps {
-                script {
-                    sh 'git checkout development'
-                    sh 'git merge ${env.BRANCH_NAME}'
-                    sh 'git push origin development'
-                }
-            }
-        }
+//         // Se os testes na development passarem, enviamos para a main
+//         stage('Enviar para Master') {
+//             when {
+//                 branch 'dev'  // Essa etapa só executa se o build for feito na branch dev
+//             }
+//             steps {
+//                 script {
+//                     // Garantir que estamos atualizados com a branch de destino (master)
+//                     sh 'git checkout master'
+//                     sh 'git pull origin master'   // Puxar as últimas mudanças da master
 
-        // Rodar os testes na branch development, incluindo os testes da nova branch
-        stage('Rodar Testes em Development') {
-            steps {
-                sh 'npm install'
-                sh 'npm run test'  // Rodando todos os testes da branch development e da nova branch
-            }
-        }
+//                     // Agora fazemos o merge da dev para a master
+//                     sh 'git merge dev'
 
-        // Se os testes na development passarem, enviamos para a main
-        stage('Enviar para Main') {
-            when {
-                branch 'development'
-            }
-            steps {
-                script {
-                    sh 'git checkout main'
-                    sh 'git merge development'
-                    sh 'git push origin main'
-                }
-            }
-        }
-    }
+//                     // Push das mudanças na master
+//                     sh 'git push origin master'
+//                 }
+//             }
+//         }
+//     }
 
-    post {
-        always {
-            echo 'Pipeline executada.'
-        }
+//     post {
+//         always {
+//             echo 'Pipeline executada.'
+//         }
 
-        success {
-            echo 'Todos os testes passaram, merge realizado com sucesso.'
-        }
+//         success {
+//             echo 'Todos os testes passaram, merge realizado com sucesso.'
+//         }
 
-        failure {
-            echo 'Testes falharam, o merge não foi realizado.'
-        }
-    }
-}
+//         failure {
+//             echo 'Testes falharam, o merge não foi realizado.'
+//         }
+//     }
+// }
 
+echo "jenkins está rodando"
