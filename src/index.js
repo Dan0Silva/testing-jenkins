@@ -13,4 +13,5 @@ if (process.env.NODE_ENV !== 'test') {
   })
 }
 
+// novo comentário
 module.exports = app
